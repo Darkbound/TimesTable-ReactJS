@@ -1,7 +1,6 @@
 import React from "react";
 import { defaults, Line } from "react-chartjs-2";
 import { useSelector } from "react-redux";
-import { generateRadiansArray } from "../../mathRadiansHelper";
 
 const defaultLineOptions = defaults.global.elements.line;
 const lineOptions = {
@@ -63,10 +62,10 @@ export default function Chart() {
   return (
     <div
       style={{
-        maxHeight: 400,
-        maxWidth: 400,
-        height: 400,
-        width: 400,
+        maxHeight: 700,
+        maxWidth: 700,
+        height: 700,
+        width: 700,
         display: "inline-block",
         border: "1px solid black",
       }}

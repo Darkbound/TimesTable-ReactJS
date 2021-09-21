@@ -4,6 +4,14 @@ import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { setTimes } from "../../actions/animationOptionsActions";
 import { setStarted, setPaused } from "../../actions/animationStateActions";
 
+import { Row, Col, Typography } from "antd";
+
+import { Button } from "../RestyledComponents/Button";
+
+import styled from "styled-components";
+
+const { Title } = Typography;
+
 export default function ChartStateControls() {
   const dispatch = useDispatch();
   const { speed } = useSelector((state) => state.animationOptions, shallowEqual);
@@ -22,6 +30,7 @@ export default function ChartStateControls() {
   };
 
   const startVisualizationHandler = () => {
+    dispatch(setStarted(true));
     intervalHandler.setOptions({
       speed,
       callback: () => {
@@ -39,26 +48,37 @@ export default function ChartStateControls() {
   };
   return (
     <>
-      {!started ? (
-        <button
-          id={"vishandler"}
-          onClick={() => {
-            dispatch(setStarted(true));
-            startVisualizationHandler();
-          }}
-        >
-          START
-        </button>
-      ) : (
-        <>
-          <button id={"pausehandler"} onClick={handlePause}>
-            {paused ? `RESUME` : `PAUSE`}
-          </button>
-          <button id={"resethandler"} onClick={handleReset}>
-            RESET
-          </button>
-        </>
-      )}
+      <Row>
+        <Title level={3}>Main Controls: </Title>
+      </Row>
+      <ChartStateControlsRow>
+        {!started ? (
+          <Col span={6}>
+            <StateControlButton id={"vishandler"} onClick={startVisualizationHandler}>
+              START
+            </StateControlButton>
+          </Col>
+        ) : (
+          <>
+            <Col span={6}>
+              <StateControlButton id={"pausehandler"} onClick={handlePause}>
+                {paused ? `RESUME` : `PAUSE`}
+              </StateControlButton>
+            </Col>
+            <Col span={6} offset={1}>
+              <StateControlButton danger id={"resethandler"} onClick={handleReset}>
+                RESET
+              </StateControlButton>
+            </Col>
+          </>
+        )}
+      </ChartStateControlsRow>
     </>
   );
 }
+
+const ChartStateControlsRow = styled((props) => <Row {...props} />)`
+  margin: 0px 0px 10px 0px;
+`;
+
+const StateControlButton = styled((props) => <Button {...props} block size="large" type="primary" />)``;

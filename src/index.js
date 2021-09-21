@@ -6,6 +6,7 @@ import thunk from "redux-thunk";
 import rootReducer from "./reducers";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import "antd/dist/antd.css";
 
 const middleware = [thunk];
 

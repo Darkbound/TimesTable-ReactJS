@@ -6,15 +6,14 @@ import ChartStateControls from "./Components/Chart/ChartStateControls";
 import { getAngleOfPointOnCircle, getAngleStep } from "./mathRadiansHelper";
 import { generateRangeArray } from "./mathArraysHelper";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
-import {
-  setSpeed,
-  setPoints,
-  setTimes,
-  setIncrements,
-  setLineColor,
-  setFillColor,
-} from "./actions/animationOptionsActions";
+import { setTimes, setLineColor, setFillColor } from "./actions/animationOptionsActions";
 import { setAnimationData } from "./actions/animationDataActions";
+
+import styled from "styled-components";
+
+import { Layout, Row, Col } from "antd";
+
+const { Header, Footer, Sider, Content } = Layout;
 
 function App() {
   const dispatch = useDispatch();
@@ -32,14 +31,17 @@ function App() {
         intervalHandler.destroy();
         intervalHandler.setOptions({ speed });
       })();
+    //eslint-ignore-next-line
   }, [speed]);
 
   useEffect(() => {
     started && intervalHandler.setCallback(() => dispatch(setTimes()));
+    //eslint-ignore-next-line
   }, [increments]);
 
   useEffect(() => {
     started && updateDatasets();
+    //eslint-ignore-next-line
   }, [times]);
 
   const updateDatasets = () => {
@@ -77,54 +79,60 @@ function App() {
     return datasets;
   };
 
-  const setLineColorWrapper = ({ rgb: { r, g, b, a } }) => {
-    const newColor = `rgba(${r},${g},${b},${a})`;
+  const setLineColorWrapper = (newColor) => {
     dispatch(setLineColor(newColor));
   };
 
-  const setFillColorWrapper = ({ rgb: { r, g, b, a } }) => {
-    const newColor = `rgba(${r},${g},${b},${a})`;
+  const setFillColorWrapper = (newColor) => {
     dispatch(setFillColor(newColor));
   };
 
-  const handleSetAnimationOptions = ({ pointsRef, speedRef, incrementRef }) => {
-    const {
-      current: { value: pointsVal },
-    } = pointsRef;
-    const {
-      current: { value: speedVal },
-    } = speedRef;
-    const {
-      current: { value: incrementVal },
-    } = incrementRef;
-
-    pointsVal && dispatch(setPoints(parseInt(pointsVal)));
-    speedVal && dispatch(setSpeed(parseInt(speedVal)));
-    incrementVal && dispatch(setIncrements(parseFloat(incrementVal)));
-  };
-
   return (
-    <>
-      <div className={"container"} style={{ display: "flex" }}>
-        <ChartStateControls />
-        <Chart />
-        <div style={{ display: "inline-block", top: 0, position: "absolute" }}>
-          <div>
-            <ColorPicker text={`line`} setColorWrapper={setLineColorWrapper} />
-          </div>
-          <div>
-            <ColorPicker text={`fill`} setColorWrapper={setFillColorWrapper} />
-          </div>
-        </div>
-        <div>Times: {times}</div>
-        <div>Speed: {speed}</div>
-        <div>Points: {points}</div>
-        <div>Increment: {increments}</div>
-        <Controls handleSetAnimationOptions={handleSetAnimationOptions} />
-      </div>
-    </>
+    <StyledContentLayout>
+      <Header>Header</Header>
+      <Layout>
+        <Sider width={200}>Sider</Sider>
+        <StyledContent>
+          <Row>
+            <Col span={11} offset={1}>
+              <Chart />
+            </Col>
+            <Col span={11}>
+              <Row>
+                <Col span={24}>
+                  <ChartStateControls />
+                </Col>
+              </Row>
+
+              <Row>
+                <Col span={24}>
+                  <Controls />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11}>
+                  <ColorPicker currentColor={lineColor} text={`line`} setColorWrapper={setLineColorWrapper} />
+                </Col>
+                <Col span={11} offset={1}>
+                  <ColorPicker currentColor={fillColor} text={`fill`} setColorWrapper={setFillColorWrapper} />
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </StyledContent>
+      </Layout>
+      <Footer>Footer</Footer>
+    </StyledContentLayout>
   );
 }
+
+const StyledContent = styled((props) => <Content {...props} />)`
+  margin: 1rem;
+`;
+
+const StyledContentLayout = styled((props) => <Layout {...props} />)`
+  background-color: white;
+`;
 
 export default App;
 
