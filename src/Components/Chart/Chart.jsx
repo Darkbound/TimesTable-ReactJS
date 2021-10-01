@@ -1,76 +1,10 @@
 import React from "react";
-import { defaults, Line } from "react-chartjs-2";
-import { useSelector } from "react-redux";
+import { StyledDivLineContainer, StyledLine } from "./elements";
 
-const defaultLineOptions = defaults.global.elements.line;
-const lineOptions = {
-  tension: 0,
-  borderColor: "rgba(0,0,0,1)",
-  borderWidth: 1,
-  fill: true,
-};
-
-defaults.global.elements.line = { ...defaultLineOptions, ...lineOptions };
-
-const options = {
-  aspectRatio: 1,
-  animation: {
-    duration: 0,
-  },
-  elements: {
-    point: {
-      radius: 0,
-    },
-  },
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        gridLines: { display: false },
-        color: `rgba(0,0,0,0)`,
-        type: "linear",
-        position: "bottom",
-        ticks: {
-          min: -1.2,
-          max: 1.2,
-          stepSize: 0.1,
-          display: false,
-        },
-      },
-    ],
-    yAxes: [
-      {
-        gridLines: { display: false },
-        type: "linear",
-        position: "bottom",
-        ticks: {
-          min: -1.2,
-          max: 1.2,
-          stepSize: 0.1,
-          display: false,
-        },
-      },
-    ],
-  },
-};
-
-export default function Chart() {
-  const animationData = useSelector((state) => state.animationData);
-
+export function Chart({ datasets, height, width, ...props }) {
   return (
-    <div
-      style={{
-        maxHeight: 700,
-        maxWidth: 700,
-        height: 700,
-        width: 700,
-        display: "inline-block",
-        border: "1px solid black",
-      }}
-    >
-      <Line data={animationData} options={options} width={null} height={null} />
-    </div>
+    <StyledDivLineContainer {...props} height={height} width={width}>
+      <StyledLine data={{ datasets }} width={null} height={null} />
+    </StyledDivLineContainer>
   );
 }

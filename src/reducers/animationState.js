@@ -1,5 +1,5 @@
 import { ACTIONS } from "../Enums/Actions";
-import { Interval } from "../IntervalHandler";
+import { Interval } from "../helpers/IntervalHandler";
 
 const { PAUSE, START, RESUME, RESET } = ACTIONS.ANIMATION_STATE;
 

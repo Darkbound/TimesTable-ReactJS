@@ -1,7 +1,8 @@
-class Interval {
+export class Interval {
   #id;
   #speed;
   #callback;
+  counter = 0;
 
   constructor(speed, callback) {
     this.#speed = speed;
@@ -43,5 +44,3 @@ class Interval {
     this.#id && clearInterval(this.#id);
   }
 }
-
-export { Interval };

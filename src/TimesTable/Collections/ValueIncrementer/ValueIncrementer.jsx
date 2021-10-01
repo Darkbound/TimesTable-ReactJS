@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { Select, Row, Col, Typography } from "antd";
+import { Row, Col } from "antd";
 
-import { Button } from "./RestyledComponents/Button";
-
-const { Option } = Select;
-
-const { Title } = Typography;
-
-const selectStyles = ({ nonStandardIncrements, step }) => ({
-  width: "100%",
-  height: 40,
-  border: nonStandardIncrements.some((increments) => increments === step) ? "1px solid blue" : "",
-});
+import { IncrementsButton } from "./IncrementsButton";
+import {
+  StyledPlusButton,
+  StyledMinusButton,
+  StyledPlusOutlined,
+  StyledMinusOutlined,
+  StyledSelect,
+  StyledOption,
+} from "./elements";
 
 export const ValueIncrementer = ({
   valueChangingActionToDispatch,
@@ -22,18 +20,23 @@ export const ValueIncrementer = ({
   max,
   defaultIncrements,
   nonStandardIncrements,
+  onIncrement = () => {},
+  onDecrement = () => {},
 }) => {
   const dispatch = useDispatch();
+
   const [step, setStep] = useState(defaultIncrements[0]);
 
   const handleIncrementing = () => {
     const newValue = currentValue + step;
     dispatch(valueChangingActionToDispatch(newValue > max ? max : newValue));
+    onIncrement();
   };
   const handleDecrementing = () => {
     const newValue = currentValue - step;
 
     dispatch(valueChangingActionToDispatch(newValue < min ? min : newValue));
+    onDecrement();
   };
 
   const handleSetStepOnClick = (newStep) => {
@@ -48,20 +51,19 @@ export const ValueIncrementer = ({
     <>
       <Row style={{ marginBottom: 10 }}>
         {nonStandardIncrements?.length > 0 && (
-          <Col span={5}>
-            <Select
+          <Col span={8}>
+            <StyledSelect
               size="large"
               defaultValue="Other steps"
               value={nonStandardIncrements.find((incr) => incr === step) ? step : "Other steps"}
-              style={selectStyles({ nonStandardIncrements, step })}
               onSelect={handleNonStandardSetStepSelectOnSelect}
             >
               {nonStandardIncrements.map((nonStandardIncrement, index) => (
-                <Option key={`option${index}value${nonStandardIncrement}`} value={nonStandardIncrement}>
+                <StyledOption key={`option${index}value${nonStandardIncrement}`} value={nonStandardIncrement}>
                   x{nonStandardIncrement}
-                </Option>
+                </StyledOption>
               ))}
-            </Select>
+            </StyledSelect>
           </Col>
         )}
 
@@ -69,7 +71,7 @@ export const ValueIncrementer = ({
           defaultIncrements.map(
             (defaultIncrement, index) =>
               index < 3 && (
-                <Col key={`incrementbtn${index}${defaultIncrement}`} span={4} offset={1}>
+                <Col key={`incrementbtn${index}${defaultIncrement}`} span={4} style={{ marginLeft: 10 }}>
                   <IncrementsButton
                     step={step}
                     increment={defaultIncrement}
@@ -81,33 +83,16 @@ export const ValueIncrementer = ({
       </Row>
       <Row>
         <Col span={5} offset={2}>
-          <Button style={{ fontSize: 25 }} size="large" onClick={handleIncrementing}>
-            +
-          </Button>
+          <StyledPlusButton onClick={handleIncrementing}>
+            <StyledPlusOutlined />
+          </StyledPlusButton>
         </Col>
         <Col span={5} offset={6}>
-          <Button size="large" onClick={handleDecrementing}>
-            <Title level={3}>-</Title>
-          </Button>
+          <StyledMinusButton onClick={handleDecrementing}>
+            <StyledMinusOutlined />
+          </StyledMinusButton>
         </Col>
       </Row>
     </>
-  );
-};
-
-const IncrementsButton = ({ step, increment, handleSetStepOnClick }) => {
-  const currentlySelected = step === increment;
-  return (
-    <Button
-      size="large"
-      type={currentlySelected ? "primary" : "default"}
-      onClick={() => {
-        handleSetStepOnClick(increment);
-      }}
-    >
-      <Title level={4} style={{ color: currentlySelected ? "white" : "black" }}>
-        x{increment}
-      </Title>
-    </Button>
   );
 };
